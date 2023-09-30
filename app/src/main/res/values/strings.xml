@@ -11,4 +11,6 @@
     <string name="tab_text_1">Followers</string>
     <string name="tab_text_2">Following</string>
     <string name="Home">Home</string>
+    <string name="saved_activity">Saved Users</string>
+    <string name="config">Configuration</string>
 </resources>

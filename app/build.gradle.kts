@@ -17,7 +17,7 @@ android {
         versionName = "1.0"
 
         buildConfigField("String", "API_URL", "\"https://api.github.com/\"" )
-        buildConfigField("String", "TOKEN", "\"token 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\"")
+        buildConfigField("String", "TOKEN", "\"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\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -78,4 +78,11 @@ dependencies {
     kapt("androidx.lifecycle:lifecycle-compiler:2.6.2")
 
     implementation("androidx.lifecycle:lifecycle-common-java8:2.6.2")
+
+    implementation("androidx.datastore:datastore-preferences-core:1.0.0")
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    implementation("androidx.room:room-runtime:2.5.2")
+    kapt("androidx.room:room-compiler:2.5.2")
+    implementation("androidx.room:room-rxjava3:2.5.2")
 }

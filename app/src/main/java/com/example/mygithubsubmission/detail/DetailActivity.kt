@@ -1,28 +1,34 @@
 package com.example.mygithubsubmission.detail
 
-import android.content.Intent
+import android.content.res.ColorStateList
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.mygithubsubmission.R
+import com.example.mygithubsubmission.data.local.DatabaseModule
 import com.example.mygithubsubmission.data.model.Item
 import com.example.mygithubsubmission.data.model.ResponseDetailUser
 import com.example.mygithubsubmission.databinding.ActivityDetailBinding
 import com.example.mygithubsubmission.detail.follow.FollowsFragment
 import com.example.mygithubsubmission.utils.Result
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class DetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailBinding
-    private val viewModel by viewModels<DetailViewModel>()
+    private val viewModel by viewModels<DetailViewModel>() {
+        DetailViewModel.Factory(DatabaseModule(this))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +36,8 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val username = intent.getStringExtra("username") ?: ""
+        val item = intent.getParcelableExtra<Item>("item")
+        val username = item?.login ?: ""
 
         viewModel.resultDetailUser.observe(this) {
             when (it) {
@@ -92,6 +99,21 @@ class DetailActivity : AppCompatActivity() {
 
         viewModel.getFollowers(username)
 
+        viewModel.resultFav.observe(this) {
+            binding.btnFav.changeIconColor(R.color.red)
+        }
+        viewModel.resultDelFav.observe(this) {
+            binding.btnFav.changeIconColor(R.color.white)
+        }
+
+        binding.btnFav.setOnClickListener{
+            viewModel.saveUser(item)
+        }
+
+        viewModel.findFav(item?.id ?: 0) {
+            binding.btnFav.changeIconColor(R.color.red)
+        }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -102,4 +124,8 @@ class DetailActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+}
+
+fun FloatingActionButton.changeIconColor(@ColorRes color: Int) {
+    imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this.context, color))
 }

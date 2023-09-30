@@ -1,26 +1,25 @@
-package com.example.mygithubsubmission
+package com.example.mygithubsubmission.main
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mygithubsubmission.R
+import com.example.mygithubsubmission.UserAdapter
+import com.example.mygithubsubmission.configurations.ConfigActivity
+import com.example.mygithubsubmission.data.local.ConfigurationPreferences
 import com.example.mygithubsubmission.data.model.Item
 import com.example.mygithubsubmission.databinding.ActivityMainBinding
 import com.example.mygithubsubmission.detail.DetailActivity
+import com.example.mygithubsubmission.saved.SavedActivity
 import com.example.mygithubsubmission.utils.Result
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,17 +27,27 @@ class MainActivity : AppCompatActivity() {
     private val adapter by lazy {
         UserAdapter {
             Intent(this, DetailActivity::class.java).apply {
-                putExtra("username", it.login)
+                putExtra("item", it)
                 startActivity(this)
             }
         }
     }
-    private  val viewModel by viewModels<MainViewModel>()
+    private  val viewModel by viewModels<MainViewModel> {
+        MainViewModel.Factory(ConfigurationPreferences(this))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        viewModel.getTheme().observe(this) {
+            if (it) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.setHasFixedSize(true)
@@ -52,7 +61,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 viewModel.getUser(newText.toString())
-                return true
+                return false
             }
         })
 
@@ -72,5 +81,26 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.getUser()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.saved -> {
+                Intent(this, SavedActivity::class.java).apply {
+                    startActivity(this)
+                }
+            }
+            R.id.config -> {
+                Intent(this, ConfigActivity::class.java).apply {
+                    startActivity(this)
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

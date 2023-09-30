@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/saved"
+        android:title="@string/saved_activity"
+        android:icon="@drawable/baseline_favorite_border_24"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/config"
+        android:icon="@drawable/baseline_moon_24"
+        android:title="@string/config"
+        app:showAsAction="always" />
+</menu>

@@ -15,11 +15,19 @@
         android:theme="@style/Theme.MyGithubSubmission"
         tools:targetApi="31">
         <activity
+            android:name=".configurations.ConfigActivity"
+            android:exported="false"
+            android:label="@string/config"/>
+        <activity
+            android:name=".saved.SavedActivity"
+            android:exported="false"
+            android:label="@string/saved_activity" />
+        <activity
             android:name=".detail.DetailActivity"
             android:exported="false"
-            android:label="@string/detail_user_activity"/>
+            android:label="@string/detail_user_activity" />
         <activity
-            android:name=".MainActivity"
+            android:name=".main.MainActivity"
             android:exported="true"
             android:label="@string/Home">
             <intent-filter>
