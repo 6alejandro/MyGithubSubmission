@@ -35,9 +35,7 @@ class SavedActivity : AppCompatActivity() {
         binding.rvFav.layoutManager = LinearLayoutManager(this)
         binding.rvFav.adapter = adapter
 
-        viewModel.getUserFav().observe(this)  {
-            adapter.setData(it)
-        }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -47,5 +45,12 @@ class SavedActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getUserFav().observe(this)  {
+            adapter.setData(it)
+        }
     }
 }

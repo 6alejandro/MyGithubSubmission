@@ -60,7 +60,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                viewModel.getUser(newText.toString())
                 return false
             }
         })
